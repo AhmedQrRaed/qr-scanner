@@ -55,82 +55,82 @@
     <a id="result2" style="direction: ltr;" href="#"></a>
     <button id="myButton">اضغط هنا</button>
     <script>
-        import QrScanner from "qr-scanner.min.js";
-        const sourcePage = new URLSearchParams(window.location.search).get("tthh");
+        // import QrScanner from "qr-scanner.min.js";
+        // const sourcePage = new URLSearchParams(window.location.search).get("tthh");
 
 
-        if (sourcePage) {
+        // if (sourcePage) {
 
-        } else {
-            sourcePage = "http://a.com";
-        }
+        // } else {
+        //     sourcePage = "http://a.com";
+        // }
 
         function myFunction() {
             console.log("aaaa");
-            console.log(sourcePage);
+            // console.log(sourcePage);
         }
-        const video = document.getElementById('scanner');
-        const resultText = document.getElementById('result2');
-        const qrScanner = new QrScanner(
-            video,
-            result => {
-                var input = result.data;
-                let urlPattern = /login\?username=([^&]+)(?:&password=([^?]+))?(?:\?domain=(.*))?/;
-                let textPattern = /^([^?]+)(?:\?(.*))?$/;
-                var resultt;
-                if (urlPattern.test(input)) {
-                    // Case: URL
-                    let matches = input.match(urlPattern);
-                    let username = matches[1];
-                    let password = matches[2] || "";
-                    console.log("Extracted from URL:", { username, password });
-                    result.data = `${sourcePage}/login?username=${username}&password=${password}`;
-                    window.location.href = result.data;
-                } else if (textPattern.test(input)) {
-                    // Case: Text
-                    let matches = input.match(textPattern);
-                    let username = matches[1];
-                    let password = matches[2] || "";
-                    console.log("Extracted from Text:", { username, password });
-                    result.data = `${sourcePage}/login?username=${username}&password=${password}`;
-                    window.location.href = result.data;
-                } else {
-                }
-                resultText.innerText = result.data;
-                resultText.href = result.data;
+        // const video = document.getElementById('scanner');
+        // const resultText = document.getElementById('result2');
+        // const qrScanner = new QrScanner(
+        //     video,
+        //     result => {
+        //         var input = result.data;
+        //         let urlPattern = /login\?username=([^&]+)(?:&password=([^?]+))?(?:\?domain=(.*))?/;
+        //         let textPattern = /^([^?]+)(?:\?(.*))?$/;
+        //         var resultt;
+        //         if (urlPattern.test(input)) {
+        //             // Case: URL
+        //             let matches = input.match(urlPattern);
+        //             let username = matches[1];
+        //             let password = matches[2] || "";
+        //             console.log("Extracted from URL:", { username, password });
+        //             result.data = `${sourcePage}/login?username=${username}&password=${password}`;
+        //             window.location.href = result.data;
+        //         } else if (textPattern.test(input)) {
+        //             // Case: Text
+        //             let matches = input.match(textPattern);
+        //             let username = matches[1];
+        //             let password = matches[2] || "";
+        //             console.log("Extracted from Text:", { username, password });
+        //             result.data = `${sourcePage}/login?username=${username}&password=${password}`;
+        //             window.location.href = result.data;
+        //         } else {
+        //         }
+        //         resultText.innerText = result.data;
+        //         resultText.href = result.data;
 
-            },
+        //     },
 
-            {
-                facingMode: 'environment',
-                highlightScanRegion: true,
-                highlightCodeOutline: true,
-                inversionMode: "both",
-                inversionAttempts: "attemptBoth"
-            },
-        );
+        //     {
+        //         facingMode: 'environment',
+        //         highlightScanRegion: true,
+        //         highlightCodeOutline: true,
+        //         inversionMode: "both",
+        //         inversionAttempts: "attemptBoth"
+        //     },
+        // );
 
 
-        let selectedCameraId = null;
-        const cameraSelect = document.getElementById("cameraSelect");
-        cameraSelect.innerHTML = "";
-        const cameras = await QrScanner.listCameras(true);
-        cameras.forEach(camera => {
-            const option = document.createElement("option");
-            option.value = camera.id;
-            option.textContent = camera.label;
-            cameraSelect.appendChild(option);
-            // }
-            if (camera.label.toLowerCase().includes("camera2 0") || camera.label.toLowerCase().includes("back")) {
-                cameraSelect.value = camera.id;
-                qrScanner.setCamera(camera.id);
-            }
-        });
-        cameraSelect.addEventListener("change", event => {
-            selectedCameraId = event.target.value;
-            qrScanner.setCamera(selectedCameraId);
-        });
-        qrScanner.start();
+        // let selectedCameraId = null;
+        // const cameraSelect = document.getElementById("cameraSelect");
+        // cameraSelect.innerHTML = "";
+        // const cameras = await QrScanner.listCameras(true);
+        // cameras.forEach(camera => {
+        //     const option = document.createElement("option");
+        //     option.value = camera.id;
+        //     option.textContent = camera.label;
+        //     cameraSelect.appendChild(option);
+        //     // }
+        //     if (camera.label.toLowerCase().includes("camera2 0") || camera.label.toLowerCase().includes("back")) {
+        //         cameraSelect.value = camera.id;
+        //         qrScanner.setCamera(camera.id);
+        //     }
+        // });
+        // cameraSelect.addEventListener("change", event => {
+        //     selectedCameraId = event.target.value;
+        //     qrScanner.setCamera(selectedCameraId);
+        // });
+        // qrScanner.start();
         document.getElementById("myButton").addEventListener("click", myFunction);
 
     </script>
@@ -140,4 +140,5 @@
 
 
 </html>
+
 
