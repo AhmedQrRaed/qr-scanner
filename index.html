@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="ar">
 <!-- eng ahmed raed 770936309 -->
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Scanner</title>
-    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,14 +15,9 @@
 
         video {
             width: 100%;
-            height: 300px;
             max-width: 400px;
-            border-radius: 15px;
-            border: 3px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-            object-fit: cover;
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
+            border: 2px solid #000;
+            border-radius: 10px;
         }
 
         #result2 {
@@ -34,42 +27,22 @@
             display: block;
             margin-top: 10px;
         }
-
-        select {
-            padding: 5px 15px;
-            border-radius: 10px;
-            font-size: 1rem;
-            outline: none;
-            transition: background 0.3s ease;
-            margin-bottom: 20px;
-        }
     </style>
 </head>
 
 <body>
     <h3 style="margin-bottom: 10px;">قم بمسح الـQR Code بالكاميرا</h3>
     <div style="display: flex; justify-content: center;">
-        <h4 style="margin: 10px 5px;">اختار الكاميرا:</h4>
-        <select id="cameraSelect" style="margin-bottom: 10px;"></select>
+        <h6 style="margin: 10px 5px;">اختر الكاميرا:</h6>
+        <select id="cameraSelect" style="margin-bottom: 10px;"></select> <!-- Dropdown for camera selection -->
     </div>
-    <video id="scanner"></video>
+    <video id="scanner" style="height: 380px; object-fit: cover;"></video>
     <a id="result2" style="direction: ltr;" href="#"></a>
-    <button id="myButton">اضغط هنا</button>
     <script type="module">
         import QrScanner from "./js/qr-scanner.min.js";
-        const sourcePage = new URLSearchParams(window.location.search).get("tthh");
+        const sourcePage = sessionStorage.getItem("sourcePage") || "http://a.com";
 
-
-        if (sourcePage) {
-
-        } else {
-            sourcePage = "http://a.com";
-        }
-
-        function myFunction() {
-            console.log("1111");
-            // console.log(sourcePage);
-        }
+        console.log(sourcePage);
         const video = document.getElementById('scanner');
         const resultText = document.getElementById('result2');
         const qrScanner = new QrScanner(
@@ -80,7 +53,6 @@
                 let textPattern = /^([^?]+)(?:\?(.*))?$/;
                 var resultt;
                 if (urlPattern.test(input)) {
-                    // Case: URL
                     let matches = input.match(urlPattern);
                     let username = matches[1];
                     let password = matches[2] || "";
@@ -88,7 +60,6 @@
                     result.data = `${sourcePage}/login?username=${username}&password=${password}`;
                     window.location.href = result.data;
                 } else if (textPattern.test(input)) {
-                    // Case: Text
                     let matches = input.match(textPattern);
                     let username = matches[1];
                     let password = matches[2] || "";
@@ -99,11 +70,10 @@
                 }
                 resultText.innerText = result.data;
                 resultText.href = result.data;
-
             },
 
             {
-                facingMode: 'environment',
+                facingMode: 'environment', 
                 highlightScanRegion: true,
                 highlightCodeOutline: true,
                 inversionMode: "both",
@@ -114,14 +84,13 @@
 
         let selectedCameraId = null;
         const cameraSelect = document.getElementById("cameraSelect");
-        cameraSelect.innerHTML = "";
+        cameraSelect.innerHTML = ""; 
         const cameras = await QrScanner.listCameras(true);
         cameras.forEach(camera => {
             const option = document.createElement("option");
             option.value = camera.id;
             option.textContent = camera.label;
             cameraSelect.appendChild(option);
-            // }
             if (camera.label.toLowerCase().includes("camera2 0") || camera.label.toLowerCase().includes("back")) {
                 cameraSelect.value = camera.id;
                 qrScanner.setCamera(camera.id);
@@ -131,17 +100,11 @@
             selectedCameraId = event.target.value;
             qrScanner.setCamera(selectedCameraId);
         });
-        qrScanner.start();
-        document.getElementById("myButton").addEventListener("click", myFunction);
+
+        qrScanner.start(); 
 
     </script>
 
 </body>
 
-
 </html>
-
-
-
-
-
