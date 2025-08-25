@@ -40,8 +40,16 @@
     <a id="result2" style="direction: ltr;" href="#"></a>
     <script type="module">
         import QrScanner from "./js/qr-scanner.min.js";
-        const sourcePage = sessionStorage.getItem("sourcePage") || "http://a.com";
+        // const sourcePage = sessionStorage.getItem("sourcePage") || "http://a.com";
+        // console.log(sourcePage);
+        var sourcePage = new URLSearchParams(window.location.search).get("tthh");
 
+
+        if (sourcePage) {
+
+        } else {
+            sourcePage = "http://a.com";
+        }
         console.log(sourcePage);
         const video = document.getElementById('scanner');
         const resultText = document.getElementById('result2');
@@ -108,3 +116,4 @@
 </body>
 
 </html>
+
