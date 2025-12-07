@@ -57,7 +57,8 @@
             video,
             result => {
                 var input = result.data;
-                let urlPattern = /login\?username=([^&]+)(?:&password=([^?]+))?(?:\?domain=(.*))?/;
+                // let urlPattern = /login\?username=([^&]+)(?:&password=([^?]+))?(?:\?domain=(.*))?/;
+                let urlPattern = /[?&]username=([^&]+)(?:&password=([^?&]+))?(?:\?domain=(.*))?/;
                 let textPattern = /^([^?]+)(?:\?(.*))?$/;
                 var resultt;
                 if (urlPattern.test(input)) {
@@ -116,5 +117,6 @@
 </body>
 
 </html>
+
 
 
