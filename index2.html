@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="ar">
-<!-- eng ahmed raed 770936309 -->
+    <!-- eng ahmed raed 770936309 -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Scanner</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,109 +32,102 @@
 </head>
 
 <body>
-    <h3 style="margin-bottom: 10px;">قم بمسح الـQR Code بالكاميرا</h3>
+
+    <h3>قم بمسح الـ QR Code بالكاميرا</h3>
+
     <div style="display: flex; justify-content: center;">
         <h6 style="margin: 10px 5px;">اختر الكاميرا:</h6>
-        <select id="cameraSelect" style="margin-bottom: 10px;"></select> <!-- Dropdown for camera selection -->
+        <select id="cameraSelect"></select>
     </div>
+
     <video id="scanner" style="height: 380px; object-fit: cover;"></video>
     <a id="result2" style="direction: ltr;" href="#"></a>
+
     <script type="module">
         import QrScanner from "./js/qr-scanner.min.js";
-        // const sourcePage = sessionStorage.getItem("sourcePage") || "http://a.com";
-        // console.log(sourcePage);
-        var sourcePage = new URLSearchParams(window.location.search).get("tthh");
 
-
-        if (sourcePage) {
-
-        } else {
+        // قراءة الرابط الأساسي
+        let sourcePage = new URLSearchParams(window.location.search).get("tthh");
+        if (!sourcePage) {
             sourcePage = "http://a.com";
         }
-        // console.log(sourcePage);
+
         const video = document.getElementById('scanner');
         const resultText = document.getElementById('result2');
+
         const qrScanner = new QrScanner(
             video,
             result => {
-                var input = result.data;
-                 input = input.replace(/^-/, "");
-                // let urlPattern = /login\?username=([^&]+)(?:&password=([^?]+))?(?:\?domain=(.*))?/;
-               let urlPattern = /[?&]username=([^&#]+)(?:&password=([^?&#]+))?/;
-let textPattern = /^([^?#]+)(?:[#?](.*))?$/;
+                let input = result.data.trim();
+                input = input.replace(/^-/, "");
 
-var resultt;
-if (urlPattern.test(input)) {
-    let matches = input.match(urlPattern);
-    let username = matches[1];
-    let password = matches[2] || "";
+                let username = "";
+                let password = "";
 
-    // ✅ إذا كلمة المرور موجودة بعد #
-    if (!password && input.includes("#")) {
-        let hashPart = input.split("#")[1];
-        password = hashPart || "";
-    }
+                // 1️⃣ رابط URL
+                let urlPattern = /[?&]username=([^&]+)(?:&password=([^?&]+))?/;
+                
+                // 2️⃣ صيغة # أو ?
+                let simplePattern = /^([^#?]+)[#?](.+)$/;
 
-    console.log("Extracted from URL:", { username, password });
-    result.data = `${sourcePage}/login?username=${username}&password=${password}`;
-    window.location.href = result.data;
+                if (urlPattern.test(input)) {
+                    let matches = input.match(urlPattern);
+                    username = matches[1];
+                    password = matches[2] || "";
 
-} else if (textPattern.test(input)) {
-    let matches = input.match(textPattern);
-    let username = matches[1];
-    let password = matches[2] || "";
+                } else if (simplePattern.test(input)) {
+                    let matches = input.match(simplePattern);
+                    username = matches[1];
+                    password = matches[2];
 
-    // ✅ نفس الفكرة هنا
-    if (input.includes("#")) {
-        let hashPart = input.split("#")[1];
-        password = hashPart || password;
-    }
-
-    console.log("Extracted from Text:", { username, password });
-    result.data = `${sourcePage}/login?username=${username}&password=${password}`;
-    window.location.href = result.data;
-} else {
+                } else {
+                    console.log("❌ صيغة غير مدعومة:", input);
+                    return;
                 }
-                resultText.innerText = result.data;
-                resultText.href = result.data;
+
+                let finalUrl = `${sourcePage}/login?username=${username}&password=${password}`;
+
+                resultText.innerText = finalUrl;
+                resultText.href = finalUrl;
+
+                // تحويل مباشر
+                window.location.href = finalUrl;
             },
 
             {
-                facingMode: 'environment', 
+                facingMode: 'environment',
                 highlightScanRegion: true,
                 highlightCodeOutline: true,
                 inversionMode: "both",
                 inversionAttempts: "attemptBoth"
-            },
+            }
         );
 
-
-        let selectedCameraId = null;
+        // الكاميرات
         const cameraSelect = document.getElementById("cameraSelect");
-        cameraSelect.innerHTML = ""; 
         const cameras = await QrScanner.listCameras(true);
+
         cameras.forEach(camera => {
             const option = document.createElement("option");
             option.value = camera.id;
             option.textContent = camera.label;
             cameraSelect.appendChild(option);
-            if (camera.label.toLowerCase().includes("camera2 0") || camera.label.toLowerCase().includes("back")) {
+
+            if (
+                camera.label.toLowerCase().includes("back") ||
+                camera.label.toLowerCase().includes("rear")
+            ) {
                 cameraSelect.value = camera.id;
                 qrScanner.setCamera(camera.id);
             }
         });
-        cameraSelect.addEventListener("change", event => {
-            selectedCameraId = event.target.value;
-            qrScanner.setCamera(selectedCameraId);
+
+        cameraSelect.addEventListener("change", e => {
+            qrScanner.setCamera(e.target.value);
         });
 
-        qrScanner.start(); 
-
+        qrScanner.start();
     </script>
 
 </body>
-
 </html>
-
-
-
