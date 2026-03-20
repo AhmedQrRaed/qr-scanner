@@ -59,24 +59,40 @@
                 var input = result.data;
                  input = input.replace(/^-/, "");
                 // let urlPattern = /login\?username=([^&]+)(?:&password=([^?]+))?(?:\?domain=(.*))?/;
-                let urlPattern = /[?&]username=([^&]+)(?:&password=([^?&]+))?(?:\?domain=(.*))?/;
-                let textPattern = /^([^?]+)(?:\?(.*))?$/;
-                var resultt;
-                if (urlPattern.test(input)) {
-                    let matches = input.match(urlPattern);
-                    let username = matches[1];
-                    let password = matches[2] || "";
-                    console.log("Extracted from URL:", { username, password });
-                    result.data = `${sourcePage}/login?username=${username}&password=${password}`;
-                    window.location.href = result.data;
-                } else if (textPattern.test(input)) {
-                    let matches = input.match(textPattern);
-                    let username = matches[1];
-                    let password = matches[2] || "";
-                    console.log("Extracted from Text:", { username, password });
-                    result.data = `${sourcePage}/login?username=${username}&password=${password}`;
-                    window.location.href = result.data;
-                } else {
+               let urlPattern = /[?&]username=([^&#]+)(?:&password=([^?&#]+))?/;
+let textPattern = /^([^?#]+)(?:[#?](.*))?$/;
+
+var resultt;
+if (urlPattern.test(input)) {
+    let matches = input.match(urlPattern);
+    let username = matches[1];
+    let password = matches[2] || "";
+
+    // ✅ إذا كلمة المرور موجودة بعد #
+    if (!password && input.includes("#")) {
+        let hashPart = input.split("#")[1];
+        password = hashPart || "";
+    }
+
+    console.log("Extracted from URL:", { username, password });
+    result.data = `${sourcePage}/login?username=${username}&password=${password}`;
+    window.location.href = result.data;
+
+} else if (textPattern.test(input)) {
+    let matches = input.match(textPattern);
+    let username = matches[1];
+    let password = matches[2] || "";
+
+    // ✅ نفس الفكرة هنا
+    if (input.includes("#")) {
+        let hashPart = input.split("#")[1];
+        password = hashPart || password;
+    }
+
+    console.log("Extracted from Text:", { username, password });
+    result.data = `${sourcePage}/login?username=${username}&password=${password}`;
+    window.location.href = result.data;
+} else {
                 }
                 resultText.innerText = result.data;
                 resultText.href = result.data;
